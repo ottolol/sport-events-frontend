@@ -19,7 +19,7 @@ interface ParticipantWithEvent extends Participant {
   Event?: Event;
 }
 
-const ParticipantsPage: React.FC = () => {
+function ParticipantsPage () {
   const [participants, setParticipants] = useState<ParticipantWithEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

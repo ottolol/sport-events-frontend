@@ -4,8 +4,8 @@ import EventList from "./components/EventList";
 import EventDetail from "./components/EventDetail";
 import AdminPanel from "./components/AdminPanel";
 import RegisterForm from "./components/RegisterForm";
-import ParticipantsPage from "./components/ParticipantsPage";
 import AdminLogin from "./components/AdminLogin";
+import ParticipantsPage from "./components/ParticipantsPage"
 
 function App() {
   return (
