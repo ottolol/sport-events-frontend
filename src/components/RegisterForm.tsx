@@ -13,14 +13,14 @@ function RegisterForm({ event }) {
 
     try {
       // Регистрация пользователя
-      await axios.post("https://ваше-приложение.onrender.com/api/register",  {
+      await axios.post("https://sport-events-backend.onrender.com/api/register",  {
         name,
         contact,
         eventId: event.id,
       });
 
       // Создание платежа
-      const res = await axios.post("https://ваше-приложение.onrender.com/api/payment/create-intent",  {
+      const res = await axios.post("https://sport-events-backend.onrender.com/api/payment/create-intent",  {
         amount: event.price,
       });
 
