@@ -28,7 +28,7 @@ function AdminPanel() {
   });
 
   useEffect(() => {
-    axios.get("https://sport-events-backend.onrender.com/api/events") 
+    axios.get("https://sport-events-backend.onrender.com/api/events")   
       .then(res => setEvents(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -47,26 +47,103 @@ function AdminPanel() {
     }));
   };
 
+  // const handleCreate = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const res = await axios.post("https://sport-events-backend.onrender.com/api/events", formData);
+  //     setEvents([...events, res.data]);
+  //   } catch (err) {
+  //     console.error("Ошибка создания мероприятия", err);
+  //   }
+  // };
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+      alert("Вы не авторизованы");
+      window.location.href = "/admin/login";
+      return;
+    }
+
     try {
-      const res = await axios.post("https://sport-events-backend.onrender.com/api/events",  formData);
+      const res = await axios.post(
+        "https://sport-events-backend.onrender.com/api/events", 
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setEvents([...events, res.data]);
-    } catch (err) {
+      alert("Мероприятие успешно создано!");
+    } catch (err: any) {
       console.error("Ошибка создания мероприятия", err);
+      if (err.response?.status === 401) {
+        alert("Сессия истекла. Войдите снова.");
+        localStorage.removeItem("adminToken");
+        window.location.href = "/admin/login";
+      } else {
+        alert(`Не удалось создать мероприятие: ${err.response?.data?.message || "Ошибка сервера"}`);
+      }
     }
   };
+
+  // const handleUpdate = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const res = await axios.put(`https://sport-events-backend.onrender.com/api/events/${formData.id}`,    formData);
+  //     setEvents(events.map(e => e.id === res.data.id ? res.data : e));
+  //     setEditEventId(null);
+  //   } catch (err) {
+  //     console.error("Ошибка обновления мероприятия", err);
+  //   }
+  // };
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+      alert("Вы не авторизованы");
+      window.location.href = "/admin/login";
+      return;
+    }
+
+    if (!formData.id || formData.id === 0) {
+      alert("Неверный ID мероприятия");
+      return;
+    }
+
     try {
-      const res = await axios.put(`https://sport-events-backend.onrender.com/api/events/${formData.id}`,  formData);
-      setEvents(events.map(e => e.id === res.data.id ? res.data : e));
+      const res = await axios.put(
+        `https://sport-events-backend.onrender.com/api/events/${formData.id}`, 
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setEvents(events.map((event) => (event.id === res.data.id ? res.data : event)));
       setEditEventId(null);
-    } catch (err) {
+      alert("Мероприятие успешно обновлено!");
+    } catch (err: any) {
       console.error("Ошибка обновления мероприятия", err);
+      if (err.response?.status === 401) {
+        alert("Сессия истекла. Войдите снова.");
+        localStorage.removeItem("adminToken");
+        window.location.href = "/admin/login";
+      } else {
+        alert(`Не удалось обновить мероприятие: ${err.response?.data?.message || "Ошибка сервера"}`);
+      }
     }
   };
 
