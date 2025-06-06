@@ -2,13 +2,30 @@ import { useState } from "react";
 import axios from "axios";
 import PaymentForm from "./PaymentForm";
 
-function RegisterForm({ event }) {
-  const [name, setName] = useState("");
-  const [contact, setContact] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
+// Интерфейс мероприятия
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+  photoUrl: string;
+  price: number;
+  status: "upcoming" | "completed";
+}
 
-  const handleSubmit = async (e) => {
+// Интерфейс props
+interface RegisterFormProps {
+  event: Event;
+}
+
+function RegisterForm({ event }: RegisterFormProps) {
+  const [name, setName] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [clientSecret, setClientSecret] = useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -20,13 +37,16 @@ function RegisterForm({ event }) {
       });
 
       // Создание платежа
-      const res = await axios.post("https://sport-events-backend.onrender.com/api/payment/create-intent",  {
-        amount: event.price,
-      });
+      const res = await axios.post(
+        "https://sport-events-backend.onrender.com/api/payment/create-intent", 
+        {
+          amount: event.price,
+        }
+      );
 
       setClientSecret(res.data.clientSecret);
       setSubmitted(true);
-    } catch (err) {
+    } catch (err: any) {
       alert("Ошибка регистрации или оплаты.");
       console.error(err);
     }
@@ -50,14 +70,16 @@ function RegisterForm({ event }) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-      /><br />
+      />
+      <br />
       <input
         type="text"
         placeholder="Email или телефон"
         value={contact}
         onChange={(e) => setContact(e.target.value)}
         required
-      /><br />
+      />
+      <br />
       <button type="submit">Зарегистрироваться</button>
     </form>
   );

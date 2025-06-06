@@ -3,11 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function EventList() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    axios.get("https://ваше-приложение.onrender.com/api/events") 
+    axios.get("https://sport-events-backend.onrender.com/api/events") 
       .then(res => setEvents(res.data))
       .catch(err => console.error(err));
   }, []);

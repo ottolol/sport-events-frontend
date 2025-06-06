@@ -5,11 +5,11 @@ import RegisterForm from "./RegisterForm";
 
 function EventDetail() {
   const { id } = useParams();
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`https://ваше-приложение.onrender.com/api/events/${id}`) 
+    axios.get(`https://sport-events-backend.onrender.com/api/events/${id}`) 
       .then(res => {
         setEvent(res.data);
         setLoading(false);

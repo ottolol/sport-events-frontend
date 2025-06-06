@@ -8,10 +8,10 @@ function AdminLogin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://ваше-приложение.onrender.com/api/auth/login",  {
+      const res = await axios.post("https://sport-events-backend.onrender.com/api/auth/login",  {
         email,
         password,
       });

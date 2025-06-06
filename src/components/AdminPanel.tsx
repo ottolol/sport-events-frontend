@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AdminPanel() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [editEventId, setEditEventId] = useState(null);
   const [formData, setFormData] = useState({
     id: "",
@@ -17,37 +17,37 @@ function AdminPanel() {
   });
 
   useEffect(() => {
-    axios.get("https://ваше-приложение.onrender.com/api/events") 
+    axios.get("https://sport-events-backend.onrender.com/api/events") 
       .then(res => setEvents(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  const handleEditClick = (event) => {
+  const handleEditClick = (event: any) => {
     setEditEventId(event.id);
     setFormData(event);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleCreate = async (e) => {
+  const handleCreate = async (e: any ) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://ваше-приложение.onrender.com/api/events",  formData);
+      const res = await axios.post("https://sport-events-backend.onrender.com/api/events",  formData);
       setEvents([...events, res.data]);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleUpdate = async (e) => {
+  const handleUpdate = async (e: any) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`https://ваше-приложение.onrender.com/api/events/${formData.id}`,  formData);
+      const res = await axios.put(`https://sport-events-backend.onrender.com/api/events/${formData.id}`,  formData);
       setEvents(events.map(e => e.id === res.data.id ? res.data : e));
       setEditEventId(null);
     } catch (err) {

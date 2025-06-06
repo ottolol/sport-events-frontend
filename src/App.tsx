@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import EventList from "./components/EventList.tsx";
-import EventDetail from "./components/EventDetail.tsx";
-import AdminPanel from "./components/AdminPanel.tsx";
-import RegisterForm from "./components/RegisterForm.tsx";
-import AdminLogin from "./components/AdminLogin.tsx";
-import ParticipantsPage from "./components/ParticipantsPage.tsx"
+import EventList from "./components/EventList";
+import EventDetail from "./components/EventDetail";
+import AdminPanel from "./components/AdminPanel";
+import RegisterForm from "./components/RegisterForm";
+import AdminLogin from "./components/AdminLogin";
+import ParticipantsPage from "./components/ParticipantsPage"
 
 function App () {
   return (
