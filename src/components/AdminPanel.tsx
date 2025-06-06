@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+// Интерфейс мероприятия
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+  photoUrl: string;
+  price: number;
+  status: "upcoming" | "completed";
+}
 
 function AdminPanel() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [editEventId, setEditEventId] = useState(null);
-  const [formData, setFormData] = useState({
-    id: "",
+  const [editEventId, setEditEventId] = useState<number | null>(null);
+  const [formData, setFormData] = useState<Partial<Event>>({
+    id: 0,
     title: "",
     description: "",
     date: "",
@@ -22,36 +33,40 @@ function AdminPanel() {
       .catch(err => console.error(err));
   }, []);
 
-  const handleEditClick = (event: any) => {
+  const handleEditClick = (event: Event) => {
     setEditEventId(event.id);
     setFormData(event);
   };
 
-  const handleChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === "price" ? Number(value) : value,
+    }));
   };
 
-  const handleCreate = async (e: any ) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const res = await axios.post("https://sport-events-backend.onrender.com/api/events",  formData);
       setEvents([...events, res.data]);
     } catch (err) {
-      console.error(err);
+      console.error("Ошибка создания мероприятия", err);
     }
   };
 
-  const handleUpdate = async (e: any) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const res = await axios.put(`https://sport-events-backend.onrender.com/api/events/${formData.id}`,  formData);
       setEvents(events.map(e => e.id === res.data.id ? res.data : e));
       setEditEventId(null);
     } catch (err) {
-      console.error(err);
+      console.error("Ошибка обновления мероприятия", err);
     }
   };
 
@@ -69,23 +84,56 @@ function AdminPanel() {
 
       {(editEventId || !editEventId) && (
         <form onSubmit={editEventId ? handleUpdate : handleCreate}>
-          <input name="title" value={formData.title} onChange={handleChange} placeholder="Название" required />
-          <br />
-          <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Описание" required />
-          <br />
-          <input name="date" type="datetime-local" value={formData.date.slice(0, 16)} onChange={handleChange} />
-          <br />
-          <input name="location" value={formData.location} onChange={handleChange} placeholder="Место" />
-          <br />
-          <input name="photoUrl" value={formData.photoUrl} onChange={handleChange} placeholder="URL фото" />
-          <br />
-          <input name="price" type="number" value={formData.price} onChange={handleChange} placeholder="Цена" />
-          <br />
-          <select name="status" value={formData.status} onChange={handleChange}>
+          <input
+            name="title"
+            value={formData.title || ""}
+            onChange={handleChange}
+            placeholder="Название"
+            required
+          /><br />
+
+          <textarea
+            name="description"
+            value={formData.description || ""}
+            onChange={handleChange}
+            placeholder="Описание"
+            required
+          /><br />
+
+          <input
+            name="date"
+            type="datetime-local"
+            value={formData.date?.slice(0, 16) || ""}
+            onChange={handleChange}
+          /><br />
+
+          <input
+            name="location"
+            value={formData.location || ""}
+            onChange={handleChange}
+            placeholder="Место"
+          /><br />
+
+          <input
+            name="photoUrl"
+            value={formData.photoUrl || ""}
+            onChange={handleChange}
+            placeholder="URL фото"
+          /><br />
+
+          <input
+            name="price"
+            type="number"
+            value={formData.price || ""}
+            onChange={handleChange}
+            placeholder="Цена"
+          /><br />
+
+          <select name="status" value={formData.status || "upcoming"} onChange={handleChange}>
             <option value="upcoming">Актуальное</option>
             <option value="completed">Прошедшее</option>
-          </select>
-          <br />
+          </select><br />
+
           <button type="submit">Сохранить</button>
         </form>
       )}
