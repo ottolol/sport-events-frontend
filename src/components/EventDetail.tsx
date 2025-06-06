@@ -3,6 +3,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import RegisterForm from "./RegisterForm";
 
+// Если интерфейс Event не вынесен в общий файл — добавь его здесь
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+  photoUrl: string;
+  price: number;
+  status: "upcoming" | "completed";
+}
+
 function EventDetail() {
   const { id } = useParams();
   const [event, setEvent] = useState<Event | null>(null);
@@ -15,7 +27,7 @@ function EventDetail() {
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
+        console.error("Ошибка загрузки мероприятия", err);
         setLoading(false);
       });
   }, [id]);
