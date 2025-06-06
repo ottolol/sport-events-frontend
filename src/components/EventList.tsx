@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+// ✅ Интерфейс мероприятия (обязательно!)
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+  photoUrl: string;
+  price: number;
+  status: "upcoming" | "completed";
+}
+
 function EventList() {
   const [events, setEvents] = useState<Event[]>([]);
   const [filter, setFilter] = useState("all");
